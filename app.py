@@ -62,7 +62,7 @@ def main():
     model.load_state_dict(state_dict)
     model.eval()
     path = os.getcwd()
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture()
     font = cv2.FONT_HERSHEY_COMPLEX_SMALL
     count=0
     score=0
@@ -165,8 +165,8 @@ def main():
             
         # if cv2.waitKey(1) & 0xFF == ord('q'):
         #     break
-    cap.release()
-    cv2.destroyAllWindows()
+#     cap.release()
+#     cv2.destroyAllWindows()
 
 # def display():
 #     sys.exit()
