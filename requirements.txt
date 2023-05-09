@@ -1,6 +1,6 @@
 numpy==1.19.5
 opencv_python==4.5.5.62
-pygame==2.3.0
+pygame==2.0.0.dev6
 streamlit==1.10.0
 torch==1.10.2
 torchvision==0.11.3
