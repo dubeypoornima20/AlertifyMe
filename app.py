@@ -8,7 +8,8 @@ import torch
 import torch.nn as nn
 import sys
 import pygame
-import beepy
+from pydub import AudioSegment
+from pydub.playback import play
 
 # from streamlit_webrtc import webrtc_streamer
 class CNN(nn.Module):
@@ -46,9 +47,11 @@ class CNN(nn.Module):
         return output
 def main():
     pygame.init()
-#     mixer.init()
-#     sound = mixer.Sound('alarm.wav')
-    sound=beep(sound=1)
+#   mixer.init()
+#   sound = mixer.Sound('alarm.wav')
+    sound = AudioSegment.from_wav("sound.wav")
+
+
     face = cv2.CascadeClassifier('haar cascade files\haarcascade_frontalface_alt.xml')
     leye = cv2.CascadeClassifier('haar cascade files\haarcascade_lefteye_2splits.xml')
     reye = cv2.CascadeClassifier('haar cascade files\haarcascade_righteye_2splits.xml')
@@ -136,7 +139,8 @@ def main():
             cv2.imwrite(os.path.join(path,'image.jpg'),frame)
             # st.video(cv2.cvtColor(frame,cv2.COLOR_BGR2RGB))
             try:
-                sound.play()
+#                 sound.play()
+                play(sound)
                 
             except:  # isplaying = False
                 pass
