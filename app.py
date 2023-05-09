@@ -43,7 +43,7 @@ class CNN(nn.Module):
         output = nn.functional.softmax(x, dim=1)
         return output
 def main():
-    mixer.init()
+    mixer.init(driver='alsa')
     sound = mixer.Sound('alarm.wav')
 
     face = cv2.CascadeClassifier('haar cascade files\haarcascade_frontalface_alt.xml')
