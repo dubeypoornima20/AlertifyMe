@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 import sys
 import pygame
+import winsound
 # import os
 # os.environ['SDL_AUDIODRIVER'] = 'dsp'
 # from streamlit_webrtc import webrtc_streamer
@@ -48,7 +49,7 @@ def main():
     pygame.init()
     mixer.init()
     sound = mixer.Sound('alarm.wav')
-
+    sound=winsound.Beep(2000,1500)
     face = cv2.CascadeClassifier('haar cascade files\haarcascade_frontalface_alt.xml')
     leye = cv2.CascadeClassifier('haar cascade files\haarcascade_lefteye_2splits.xml')
     reye = cv2.CascadeClassifier('haar cascade files\haarcascade_righteye_2splits.xml')
