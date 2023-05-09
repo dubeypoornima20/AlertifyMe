@@ -58,7 +58,7 @@ def main():
 
     lbl=['Close','Open']
     model=CNN()
-    state_dict=torch.load('models/cnncat21.pt')
+    state_dict=torch.load('models/cnnCat21.pt')
     model.load_state_dict(state_dict)
     model.eval()
     path = os.getcwd()
