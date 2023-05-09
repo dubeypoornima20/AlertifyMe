@@ -49,7 +49,7 @@ def main():
     pygame.init()
 #   mixer.init()
 #   sound = mixer.Sound('alarm.wav')
-    sound = AudioSegment.from_wav("sound.wav")
+    sound = AudioSegment.from_wav("alarm.wav")
 
 
     face = cv2.CascadeClassifier('haar cascade files\haarcascade_frontalface_alt.xml')
