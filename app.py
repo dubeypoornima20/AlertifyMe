@@ -8,8 +8,8 @@ import torch
 import torch.nn as nn
 import sys
 import pygame
-import os
-os.environ['SDL_AUDIODRIVER'] = 'dsp'
+# import os
+# os.environ['SDL_AUDIODRIVER'] = 'dsp'
 # from streamlit_webrtc import webrtc_streamer
 class CNN(nn.Module):
     def __init__(self):
