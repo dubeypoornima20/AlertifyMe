@@ -45,6 +45,7 @@ class CNN(nn.Module):
         output = nn.functional.softmax(x, dim=1)
         return output
 def main():
+    pygame.init()
     mixer.init()
     sound = mixer.Sound('alarm.wav')
 
