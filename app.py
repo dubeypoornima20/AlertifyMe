@@ -7,7 +7,7 @@ import time
 import torch
 import torch.nn as nn
 import sys
-
+import pygame
 import os
 os.environ['SDL_AUDIODRIVER'] = 'dsp'
 # from streamlit_webrtc import webrtc_streamer
