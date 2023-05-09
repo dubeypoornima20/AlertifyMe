@@ -7,6 +7,7 @@ import time
 import torch
 import torch.nn as nn
 import sys
+pygame.init()
 # from streamlit_webrtc import webrtc_streamer
 class CNN(nn.Module):
     def __init__(self):
