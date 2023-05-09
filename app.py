@@ -46,7 +46,7 @@ class CNN(nn.Module):
         return output
 def main():
     pygame.init()
-    mixer.init()
+#     mixer.init()
     sound = mixer.Sound('alarm.wav')
 
     face = cv2.CascadeClassifier('haar cascade files\haarcascade_frontalface_alt.xml')
