@@ -62,7 +62,7 @@ def main():
     model.load_state_dict(state_dict)
     model.eval()
     path = os.getcwd()
-    cap = cv2.VideoCapture()
+    cap = cv2.VideoCapture(1)
     font = cv2.FONT_HERSHEY_COMPLEX_SMALL
     count=0
     score=0
