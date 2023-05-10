@@ -1,60 +1,3 @@
-# import os
-# from keras.preprocessing import image
-# import matplotlib.pyplot as plt 
-# import numpy as np
-# from keras.utils.np_utils import to_categorical
-# import random,shutil
-# from keras.models import Sequential
-# from keras.layers import Dropout,Conv2D,Flatten,Dense, MaxPooling2D, BatchNormalization
-# from keras.models import load_model
-
-
-# def generator(dir, gen=image.ImageDataGenerator(rescale=1./255), shuffle=True,batch_size=1,target_size=(24,24),class_mode='categorical' ):
-
-#     return gen.flow_from_directory(dir,batch_size=batch_size,shuffle=shuffle,color_mode='grayscale',class_mode=class_mode,target_size=target_size)
-
-# BS= 32
-# TS=(24,24)
-# train_batch= generator('data/train',shuffle=True, batch_size=BS,target_size=TS)
-# valid_batch= generator('data/valid',shuffle=True, batch_size=BS,target_size=TS)
-# SPE= len(train_batch.classes)//BS
-# VS = len(valid_batch.classes)//BS
-# print(SPE,VS)
-
-
-# # img,labels= next(train_batch)
-# # print(img.shape)
-
-# model = Sequential([
-#     Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(24,24,1)),
-#     MaxPooling2D(pool_size=(1,1)),
-#     Conv2D(32,(3,3),activation='relu'),
-#     MaxPooling2D(pool_size=(1,1)),
-# #32 convolution filters used each of size 3x3
-# #again
-#     Conv2D(64, (3, 3), activation='relu'),
-#     MaxPooling2D(pool_size=(1,1)),
-
-# #64 convolution filters used each of size 3x3
-# #choose the best features via pooling
-    
-# #randomly turn neurons on and off to improve convergence
-#     Dropout(0.25),
-# #flatten since too many dimensions, we only want a classification output
-#     Flatten(),
-# #fully connected to get all relevant data
-#     Dense(128, activation='relu'),
-# #one more dropout for convergence' sake :) 
-#     Dropout(0.5),
-# #output a softmax to squash the matrix into output probabilities
-#     Dense(2, activation='softmax')
-# ])
-
-# model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
-
-# model.fit_generator(train_batch, validation_data=valid_batch,epochs=15,steps_per_epoch=SPE ,validation_steps=VS)
-
-# model.save('models/cnnCat2.h5', overwrite=True)
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -110,9 +53,11 @@ class CNN(nn.Module):
 model = CNN()
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-
+train_loss = []
+valid_accuracy = []
 for epoch in range(15):
     running_loss = 0.0
+    num_batches=1
     for i, data in enumerate(train_loader):
         inputs, labels = data
         optimizer.zero_grad()
@@ -124,10 +69,14 @@ for epoch in range(15):
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
+        num_batches+=1
         if i % 50 == 49:
+            # train_loss.append(running_loss / 50)
             print('[%d, %5d] loss: %.3f' % (epoch + 1, i + 1, running_loss / 50))
             running_loss = 0.0
-
+    epoch_loss = running_loss / num_batches
+    train_loss.append(epoch_loss)
+    print('[Epoch %d] training loss: %.3f' % (epoch + 1, epoch_loss))
     correct = 0
     total = 0
     with torch.no_grad():
@@ -137,7 +86,26 @@ for epoch in range(15):
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
-
+    accuracy = 100 * correct / total
+    valid_accuracy.append(accuracy)
     print('Accuracy of the network on the validation set: %d %%' % (100 * correct / total))
+
+import matplotlib.pyplot as plt
+
+# Plot and save the loss curve
+plt.plot(train_loss)
+plt.title('Training Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.savefig('train_loss.png')
+plt.show()
+
+# Plot and save the accuracy curve
+plt.plot(valid_accuracy)
+plt.title('Validation Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy (%)')
+plt.savefig('valid_accuracy.png')
+plt.show()
 
 torch.save(model.state_dict(), 'models/cnnCat21.pt')
