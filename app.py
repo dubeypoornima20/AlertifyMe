@@ -106,34 +106,7 @@ while True:
         cv2.rectangle(frame, (x, y), (x + w, y + h), (100, 100, 100), 1)
 
 
-#     model=CNN()
-#     state_dict=torch.load('models/cnnCat21.pt')
-#     model.load_state_dict(state_dict)
-#     model.eval()
-#     path = os.getcwd()
-#     cap = cv2.VideoCapture(0)
-#     font = cv2.FONT_HERSHEY_COMPLEX_SMALL
-#     count=0
-#     score=0
-#     thicc=2
-#     rpred=[99]
-#     lpred=[99]
-#     placeholder=st.empty()
 
-#     while(True):
-#         ret, frame = cap.read()
-#         height,width = frame.shape[:2] 
-
-#         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        
-#         faces = face.detectMultiScale(gray,minNeighbors=5,scaleFactor=1.1,minSize=(25,25))
-#         left_eye = leye.detectMultiScale(gray)
-#         right_eye =  reye.detectMultiScale(gray)
-
-#         cv2.rectangle(frame, (0,height-50) , (200,height) , (0,0,0) , thickness=cv2.FILLED )
-
-#         for (x,y,w,h) in faces:
-#             cv2.rectangle(frame, (x,y) , (x+w,y+h) , (100,100,100) , 1 )
 
         for (x,y,w,h) in right_eye:
             r_eye=frame[y:y+h,x:x+w]
