@@ -7,15 +7,6 @@ import time
 import torch
 import torch.nn as nn
 import sys
-import pygame
-from pydub import AudioSegment
-from pydub.playback import play
-import streamlit as st
-import numpy as np
-import streamlit_webrtc as webrtc
-from streamlit_webrtc import webrtc_streamer
-
-
 # from streamlit_webrtc import webrtc_streamer
 class CNN(nn.Module):
     def __init__(self):
@@ -51,62 +42,42 @@ class CNN(nn.Module):
         output = nn.functional.softmax(x, dim=1)
         return output
 def main():
-    pygame.init()
-#   mixer.init()
-#   sound = mixer.Sound('alarm.wav')
-    sound = AudioSegment.from_wav("alarm.wav")
-
+    mixer.init()
+    sound = mixer.Sound('alarm.wav')
 
     face = cv2.CascadeClassifier('haar cascade files\haarcascade_frontalface_alt.xml')
     leye = cv2.CascadeClassifier('haar cascade files\haarcascade_lefteye_2splits.xml')
     reye = cv2.CascadeClassifier('haar cascade files\haarcascade_righteye_2splits.xml')
 
     lbl=['Close','Open']
-    from streamlit_webrtc import webrtc_streamer
-import cv2
+    model=CNN()
+    state_dict=torch.load('models/cnncat21.pt')
+    model.load_state_dict(state_dict)
+    model.eval()
+    path = os.getcwd()
+    cap = cv2.VideoCapture(0)
+    font = cv2.FONT_HERSHEY_COMPLEX_SMALL
+    count=0
+    score=0
+    thicc=2
+    rpred=[99]
+    lpred=[99]
+    placeholder=st.empty()
 
-model = CNN()
-state_dict = torch.load('models/cnnCat21.pt')
-model.load_state_dict(state_dict)
-model.eval()
-path = os.getcwd()
-font = cv2.FONT_HERSHEY_COMPLEX_SMALL
-count = 0
-score = 0
-thicc = 2
-rpred = [99]
-lpred = [99]
-placeholder = st.empty()
+    while(True):
+        ret, frame = cap.read()
+        height,width = frame.shape[:2] 
 
-face = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-leye = cv2.CascadeClassifier('haarcascade_lefteye_2splits.xml')
-reye = cv2.CascadeClassifier('haarcascade_righteye_2splits.xml')
-
-webrtc_ctx = webrtc_streamer(key="example", video_transformer_factory=None)
-
-while True:
-    if not webrtc_ctx.video_receiver:
-        continue
-    try:
-        frame = webrtc_ctx.video_receiver.get_frame(timeout=1)
-    except queue.Empty:
-        continue
-    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-    height, width = frame.shape[:2]
-
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         
-    faces = face.detectMultiScale(gray, minNeighbors=5, scaleFactor=1.1, minSize=(25,25))
-    left_eye = leye.detectMultiScale(gray)
-    right_eye =  reye.detectMultiScale(gray)
+        faces = face.detectMultiScale(gray,minNeighbors=5,scaleFactor=1.1,minSize=(25,25))
+        left_eye = leye.detectMultiScale(gray)
+        right_eye =  reye.detectMultiScale(gray)
 
-    cv2.rectangle(frame, (0, height - 50), (200, height), (0, 0, 0), thickness=cv2.FILLED)
+        cv2.rectangle(frame, (0,height-50) , (200,height) , (0,0,0) , thickness=cv2.FILLED )
 
-    for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (100, 100, 100), 1)
-
-
-
+        for (x,y,w,h) in faces:
+            cv2.rectangle(frame, (x,y) , (x+w,y+h) , (100,100,100) , 1 )
 
         for (x,y,w,h) in right_eye:
             r_eye=frame[y:y+h,x:x+w]
@@ -161,8 +132,7 @@ while True:
             cv2.imwrite(os.path.join(path,'image.jpg'),frame)
             # st.video(cv2.cvtColor(frame,cv2.COLOR_BGR2RGB))
             try:
-#                 sound.play()
-                play(sound)
+                sound.play()
                 
             except:  # isplaying = False
                 pass
@@ -187,8 +157,8 @@ while True:
             
         # if cv2.waitKey(1) & 0xFF == ord('q'):
         #     break
-#     cap.release()
-#     cv2.destroyAllWindows()
+    # cap.release()
+    # cv2.destroyAllWindows()
 
 # def display():
 #     sys.exit()
